@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/students")
@@ -30,15 +31,15 @@ public class StudentController {
     public List<Student> getStudets(){
         return  studentService.findAllStudent();
     }
-    @GetMapping("/{studentId}")
-    public  Student getStudentById(@PathVariable String studentId){
+    @GetMapping("student/{studentId}")
+    public Optional<Student> getStudentById(@PathVariable String studentId){
         return studentService.getStudentById(studentId);
     }
-    @GetMapping("/{file}")
+    @GetMapping("students/{file}")
     public List<Student> findStudenfile(@PathVariable int file){
         return  studentService.getFile(file);
     }
-    @DeleteMapping("{/studentIds}")
+    @DeleteMapping("/{studentIds}")
     public String deleteStudent(@PathVariable String studentIds){
         return  studentService.deleteStudent(studentIds);
     }
