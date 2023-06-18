@@ -27,6 +27,12 @@ public class StudentController {
         studentService.addStudent(student);
         return  new ResponseEntity<Void>(HttpStatus.CREATED);
     }
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping
+    public ResponseEntity<Student> updateStudents(@RequestBody Student student){
+        Student studentUpdate = studentService.updateStudent(student);
+        return  new ResponseEntity(this.studentService.updateStudent(student),HttpStatus.CREATED);
+    }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping
@@ -37,12 +43,12 @@ public class StudentController {
     @GetMapping("student/{studentId}")
     public Optional<Student> getStudentById(@PathVariable String studentId){
         return studentService.getStudentById(studentId);
-    }
+    }/*
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("students/{file}")
     public List<Student> findStudenfile(@PathVariable int file){
         return  studentService.getFile(file);
-    }
+    }*/
     @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping("student/{studentIds}")
     public String deleteStudent(@PathVariable String studentIds){
