@@ -15,6 +15,9 @@ public class Student {
     private String name;
     private String email;
     private String instituto;
+    private String type;
     private String phone;
     private String password;
+    private Long createdAt;
+    private Long setUpdatedAt;
 }
