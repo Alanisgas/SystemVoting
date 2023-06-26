@@ -2,6 +2,7 @@ package ar.edu.unaj.login.controller;
 
 import ar.edu.unaj.login.model.Student;
 import ar.edu.unaj.login.service.StudentService;
+import ar.edu.unaj.login.service.util.EmailSenderExeption;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -23,9 +24,15 @@ public class StudentController {
     @CrossOrigin(origins = "http://localhost:4200")
     @ApiOperation(value = "create student",response = Iterable.class)
     @PostMapping(path = "/create-student")
-    public ResponseEntity<Void> createStudent(@RequestBody Student student){
+    public ResponseEntity<Void> createStudent(@RequestBody Student student) throws Exception {
         studentService.addStudent(student);
         return  new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping
+    public ResponseEntity<Student> updateStudents(@RequestBody Student student){
+        Student studentUpdate = studentService.updateStudent(student);
+        return  new ResponseEntity(this.studentService.updateStudent(student),HttpStatus.CREATED);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
@@ -37,12 +44,12 @@ public class StudentController {
     @GetMapping("student/{studentId}")
     public Optional<Student> getStudentById(@PathVariable String studentId){
         return studentService.getStudentById(studentId);
-    }
+    }/*
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("students/{file}")
     public List<Student> findStudenfile(@PathVariable int file){
         return  studentService.getFile(file);
-    }
+    }*/
     @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping("student/{studentIds}")
     public String deleteStudent(@PathVariable String studentIds){
