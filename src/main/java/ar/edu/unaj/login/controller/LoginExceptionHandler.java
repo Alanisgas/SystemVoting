@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@ControllerAdvice(assignableTypes = LoginController.class)
+@ControllerAdvice(assignableTypes = UserController.class)
 @RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class LoginExceptionHandler {
 

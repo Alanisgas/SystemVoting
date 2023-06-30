@@ -16,6 +16,5 @@ public class PoliticalParty {
     @Id
     private String idPP;
     private String namePP;
-    private String numberIDPP;
     private List<String> personal;
 }
