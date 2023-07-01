@@ -10,9 +10,14 @@ import java.util.List;
 @Service
 public class PoliticalPartyService {
     private final PoliticalPartyRepository politicalPartyRepository;
+    private final VoteService voteService;
 
-    public PoliticalPartyService(PoliticalPartyRepository politicalPartyRepository) {
+ //   public PoliticalPartyService() {
+
+  //  }
+    public PoliticalPartyService(PoliticalPartyRepository politicalPartyRepository, VoteService voteService) {
         this.politicalPartyRepository = politicalPartyRepository;
+        this.voteService = voteService;
     }
 
     public PoliticalParty getPoliticalPartyById(String id) {
@@ -23,11 +28,18 @@ public class PoliticalPartyService {
     }
 
     public void addPoliticalParty(CreatePPartyRequest politicalPartyRequest) {
-        PoliticalParty politicalParty = new PoliticalParty();
-        politicalParty.setNamePP(politicalPartyRequest.getNamePP());
-        politicalParty.setIdPP(politicalPartyRequest.getIdPP());
-        politicalParty.setPersonal(politicalPartyRequest.getPersonal());
-        politicalPartyRepository.addPoliticalParty(politicalParty);
+        String politicalPartyId = politicalPartyRequest.getIdPP();
+        if (voteService.politicalPartyExists(politicalPartyId)) {
+            throw new IllegalStateException("\n" + "The PoliticalParty key already exists");
+        }
+        else {
+            PoliticalParty politicalParty = new PoliticalParty();
+            politicalParty.setNamePP(politicalPartyRequest.getNamePP());
+            politicalParty.setIdPP(politicalPartyRequest.getIdPP());
+            politicalParty.setPersonal(politicalPartyRequest.getPersonal());
+            politicalPartyRepository.addPoliticalParty(politicalParty);
+            voteService.addPoliticalPartyToVoteList(politicalParty.getIdPP());
+        }
     }
     public List<PoliticalParty> getAllPoliticalParties() {
         return politicalPartyRepository.getAllPoliticalParties();

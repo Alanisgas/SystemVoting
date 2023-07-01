@@ -47,14 +47,9 @@ public class VoteService {
         }
         else{
             String clave = votoRequest.getPoliticalPartyId();
-            if (!voteList.containsKey(clave)) {
-                if(voteList.get(clave) != null){
-                    int valor = voteList.get(clave);
-                    voteList.put(clave, valor + 1);
-                }
-                else{
-                    voteList.put(clave, 1);
-                }
+            if (voteList.containsKey(clave)) {
+                int valor = voteList.get(clave);
+                voteList.put(clave, valor + 1);
                 votedUsers.put(votoRequest.getUserId(), true);
             } else {
                 throw new IllegalArgumentException("It is not a valid vote, please try again.");
@@ -66,6 +61,16 @@ public class VoteService {
         if (votedUsers != null && votedUsers.containsKey(userId))
             return true;
         else{
+            return false;
+        }
+    }
+    public void addPoliticalPartyToVoteList(String politicalPartyId) {
+        voteList.put(politicalPartyId, 0);
+    }
+    public boolean politicalPartyExists(String id){
+        if (voteList.containsKey(id)){
+            return true;
+        }else {
             return false;
         }
     }
