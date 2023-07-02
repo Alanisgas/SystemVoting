@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document (collection = "student")
+@Document (collection = "user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +21,7 @@ public class User {
     private Long createdAt;
     private Long setUpdatedAt;
     private boolean autenticate;
+    private Roles roles;
+
 
 }

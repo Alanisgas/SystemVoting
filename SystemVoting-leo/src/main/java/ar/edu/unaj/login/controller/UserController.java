@@ -1,6 +1,6 @@
 package ar.edu.unaj.login.controller;
 
-import ar.edu.unaj.login.model.PoliticalParty;
+import ar.edu.unaj.login.model.Roles;
 import ar.edu.unaj.login.model.User;
 import ar.edu.unaj.login.service.UserService;
 import io.swagger.annotations.Api;
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/Users")
-@Api (value = "User")
+@RequestMapping(value = "/users")
+@Api (value = "user")
 public class UserController {
 
     @Autowired
@@ -28,9 +28,14 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully"),
             @ApiResponse(code = 406, message = "You are not able to create user")})
-    @PostMapping(path = "/create-User")
+    @PostMapping(path = "/create-user")
     public ResponseEntity<Void> createUser(@RequestBody User user) throws Exception {
-        Optional<User> userExists = userService.findUserByEmail(user.getEmail());
+        //Optional<User> userExists = userService.findUserByEmail(user.getEmail());
+        if (!isValidRole(user.getRoles())) {
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        }
+       userService.addUser(user);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);/*
         if (userExists != null) {
             return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
         } else {
@@ -46,7 +51,7 @@ public class UserController {
                 return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 
             }
-        }
+        }*/
     }
     @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping
@@ -64,15 +69,15 @@ public class UserController {
     @GetMapping("User/{UserId}")
     public Optional<User> getUserById(@PathVariable String UserId){
         return userService.getUserById(UserId);
-    }/*
-    @CrossOrigin(origins = "http://localhost:4200")
-    @GetMapping("Users/{file}")
-    public List<User> findStudenfile(@PathVariable int file){
-        return  UserService.getFile(file);
-    }*/
+    }
     @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping("User/{UserIds}")
     public String deleteUser(@PathVariable String UserIds){
         return  userService.deleteUser(UserIds);
     }
+    private boolean isValidRole(Roles roles) {
+        // Aquí puedes definir los roles válidos (por ejemplo, "votante" o "administrador")
+        return roles != null && ("votante".equalsIgnoreCase(roles.getRoles()) || "administrador".equalsIgnoreCase(roles.getRoles()));
+    }
 }
+

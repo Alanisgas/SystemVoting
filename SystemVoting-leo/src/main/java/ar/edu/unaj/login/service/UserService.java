@@ -1,4 +1,5 @@
 package ar.edu.unaj.login.service;
+import ar.edu.unaj.login.model.Roles;
 import ar.edu.unaj.login.model.User;
 import ar.edu.unaj.login.dto.EmailRequest;
 import ar.edu.unaj.login.repository.UserRepository;
@@ -12,7 +13,7 @@ import java.util.Optional;
 @Service
 public class UserService {
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
     @Autowired
     EmailService emailService;
 
@@ -25,10 +26,15 @@ public class UserService {
 
     //crud
     public User addUser(User user)  throws Exception {
-
+        if (!isValidRole(user.getRoles())) {
+            throw new IllegalArgumentException("Rol inválido. Por favor, proporciona un rol válido (votante o administrador).");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalStateException(String.format("Ya existe un usuario con el correo electrónico %s", user.getEmail()));
+        }
         // no manda mail por la api
         // Verificamos de que no exista algún usuario ya registrado.
-        if (!isValid(user)) {
+       /* if (!isValid(user)) {
             throw new IllegalStateException("The email or the user is not valid. Try again.");
         }
         if (repository.findByEmail(user.getEmail()).isPresent()) {
@@ -45,32 +51,39 @@ public class UserService {
         if (!sendWelcomeMail(user)) {
             throw new Exception("The students was created, but the mail delivery failed.");
         }
+        return result;*/
+        //user.setCreatedAt(user.getCreatedAt());
+        User result = userRepository.save(user);
         return result;
+    }
+    private boolean isValidRole(Roles roles) {
+        // Aquí puedes definir los roles válidos (por ejemplo, "votante" o "administrador")
+        return roles != null && ("votante".equalsIgnoreCase(roles.getRoles()) || "administrador".equalsIgnoreCase(roles.getRoles()));
     }
 
     public User updateUser(User user) {
-        User userOriginal = repository.findById(user.getUserId()).orElse(null);
+        User userOriginal = userRepository.findById(user.getUserId()).orElse(null);
         userOriginal.setName(user.getName());
         userOriginal.setType(user.getType());
         userOriginal.setEmail(user.getEmail());
         userOriginal.setPassword(user.getPassword());
         userOriginal.setInstituto(user.getInstituto());
-        return repository.save(userOriginal);
+        return userRepository.save(userOriginal);
     }
     public Optional<User> findUserByEmail(String email) {
-        return repository.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
     public List<User> findAllUser() {
-        return repository.findAll();
+        return userRepository.findAll();
     }
 
     public Optional<User> getUserById(String intId) {
-        return repository.findById(intId);
+        return userRepository.findById(intId);
     }
-
+    public Optional<User> getUserByName(String name){ return Optional.ofNullable(userRepository.findByName(name));}
 
     public String deleteUser(String UserId) {
-        repository.deleteById(UserId);
+        userRepository.deleteById(UserId);
         return UserId + "User delete";
     }
     public User createUserWithoutSendMail(User user) {
@@ -78,7 +91,7 @@ public class UserService {
         if (!isValid(user)) {
             throw new IllegalStateException("The email or the user is not valid. Try again.");
         }
-        if (repository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalStateException(String.format("Already exist an user with email %s", user.getEmail()));
         }
         // Encriptamos la contraseña.
@@ -87,7 +100,7 @@ public class UserService {
         user.setCreatedAt(System.currentTimeMillis() / 1000);
         // Establecemos el TimeStamp de modificación a la misma de creación.
         user.setSetUpdatedAt(user.getCreatedAt());
-        User result = repository.save(user);
+        User result = userRepository.save(user);
         return result;
     }
     public boolean isValid(User user) {

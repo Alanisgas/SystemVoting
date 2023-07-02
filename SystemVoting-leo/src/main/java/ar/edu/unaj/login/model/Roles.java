@@ -1,20 +1,19 @@
 package ar.edu.unaj.login.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import javax.persistence.*;
 
-
-@Document (collection = "politicalParty")
+@Document(collection = "roles")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PoliticalParty {
+public class Roles {
     @Id
-    private String idPP;
-    private String namePP;
-    private List<String> personal;
+    private int id;
+
+    private String roles;
 }
