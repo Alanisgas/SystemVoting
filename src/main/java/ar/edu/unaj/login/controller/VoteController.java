@@ -21,7 +21,7 @@ public class VoteController {
     public VoteController(VoteService voteService) {
         this.voteService = voteService;
     }
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:8080")
     @ApiResponses(value = {
             @ApiResponse(code = 202, message = "Successfully"),
             @ApiResponse(code = 401, message = "You are not authenticated")})
@@ -35,7 +35,8 @@ public class VoteController {
             return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
         }
     }
-    @GetMapping
+    @CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping(path = "/getVotes")
     public ResponseEntity<Map<String, Integer>> getAllVotes() {
         Map<String, Integer> voteCounts = voteService.getAllVotes();
         return ResponseEntity.ok(voteCounts);

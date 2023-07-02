@@ -20,18 +20,19 @@ public class PoliticalPartyController {
     public PoliticalPartyController(PoliticalPartyService politicalPartyService) {
         this.politicalPartyService = politicalPartyService;
     }
-
-    @GetMapping
+    @CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping(path = "/political-parties")
     public ResponseEntity<List<PoliticalParty>> getAllPoliticalParties() {
         List<PoliticalParty> politicalParties = politicalPartyService.getAllPoliticalParties();
         return ResponseEntity.ok(politicalParties);
     }
-
-    @PostMapping
+    @CrossOrigin(origins = "http://localhost:8080")
+    @PostMapping(path="/political-party")
     public ResponseEntity<Void> addPoliticalParty(@RequestBody CreatePPartyRequest politicalPartyRequest) {
         politicalPartyService.addPoliticalParty(politicalPartyRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully"),
